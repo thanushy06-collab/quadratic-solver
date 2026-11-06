@@ -1,0 +1,26 @@
+{
+  "name": "quadratic-solver",
+  "version": "1.0.0",
+  "description": "Interactive Quadratic Equation Solver & Visualizer with exact radical arithmetic, step-by-step derivations, and parabola canvas plotting.",
+  "main": "solver-core.js",
+  "bin": {
+    "quadratic-cli": "./solver-cli.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "cli": "node solver-cli.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "quadratic",
+    "algebra",
+    "solver",
+    "parabola",
+    "math",
+    "canvas",
+    "interactive"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}
+

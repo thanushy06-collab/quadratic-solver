@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuadraticLab — Advanced Quadratic Equation Solver & Visualizer</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation / Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <div class="brand-icon">f(x)</div>
+        <div class="brand-title">Quadratic<span>Lab</span></div>
+      </a>
+      <div class="nav-actions">
+        <button id="themeToggle" class="icon-btn" title="Toggle Theme">☀️</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Quick Presets -->
+    <div class="presets-bar">
+      <span class="presets-label">Presets:</span>
+      <button class="preset-chip" data-a="1" data-b="-5" data-c="6">Standard Real: x² - 5x + 6 = 0</button>
+      <button class="preset-chip" data-a="1" data-b="-4" data-c="4">Double Root: x² - 4x + 4 = 0</button>
+      <button class="preset-chip" data-a="1" data-b="2" data-c="5">Complex: x² + 2x + 5 = 0</button>
+      <button class="preset-chip" data-a="1" data-b="-4" data-c="1">Irrational: x² - 4x + 1 = 0</button>
+      <button class="preset-chip" data-a="-1" data-b="2" data-c="3">Concave Down: -x² + 2x + 3 = 0</button>
+      <button class="preset-chip" data-a="2" data-b="0" data-c="-8">Pure Quadratic: 2x² - 8 = 0</button>
+      <button class="preset-chip" data-a="0" data-b="3" data-c="-6">Linear: 3x - 6 = 0</button>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <main class="main-grid">
+
+      <!-- Left Column: Controls & Equation Data -->
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">Equation & Parameters</h2>
+          <button id="btnCopyLatex" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+            Copy LaTeX
+          </button>
+        </div>
+
+        <!-- Live Rendered Equation -->
+        <div class="equation-hero">
+          <div id="renderedEq" class="equation-rendered">x² - 5x + 6 = 0</div>
+        </div>
+
+        <!-- Inputs and Sliders for a, b, c -->
+        <div class="inputs-container">
+
+          <!-- Coefficient A -->
+          <div class="coef-group">
+            <div class="coef-top">
+              <label class="coef-label" for="inputA">Leading Coefficient (<span>a</span>)</label>
+              <div class="coef-input-wrapper">
+                <input type="number" id="inputA" class="coef-input" value="1" step="any">
+              </div>
+            </div>
+            <div class="coef-slider-wrapper">
+              <input type="range" id="sliderA" class="coef-slider" min="-10" max="10" step="0.5" value="1">
+            </div>
+          </div>
+
+          <!-- Coefficient B -->
+          <div class="coef-group">
+            <div class="coef-top">
+              <label class="coef-label" for="inputB">Linear Coefficient (<span>b</span>)</label>
+              <div class="coef-input-wrapper">
+                <input type="number" id="inputB" class="coef-input" value="-5" step="any">
+              </div>
+            </div>
+            <div class="coef-slider-wrapper">
+              <input type="range" id="sliderB" class="coef-slider" min="-20" max="20" step="0.5" value="-5">
+            </div>
+          </div>
+
+          <!-- Coefficient C -->
+          <div class="coef-group">
+            <div class="coef-top">
+              <label class="coef-label" for="inputC">Constant Term (<span>c</span>)</label>
+              <div class="coef-input-wrapper">
+                <input type="number" id="inputC" class="coef-input" value="6" step="any">
+              </div>
+            </div>
+            <div class="coef-slider-wrapper">
+              <input type="range" id="sliderC" class="coef-slider" min="-20" max="20" step="0.5" value="6">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="controls-row">
+          <button id="btnRandom" class="btn btn-secondary">🎲 Randomize</button>
+          <button id="btnReset" class="btn btn-secondary">↺ Reset</button>
+        </div>
+
+        <!-- Summary Statistics Grid -->
+        <div class="summary-grid">
+          <div class="stat-box">
+            <div class="stat-title">Classification</div>
+            <div id="statType" class="stat-val" style="font-size: 0.85rem;">Quadratic</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Discriminant (Δ)</div>
+            <div id="statDiscriminant" class="stat-val" style="color: var(--accent-success);">1 (Δ > 0)</div>
+          </div>
+          <div class="stat-box" style="grid-column: span 2;">
+            <div class="stat-title">Roots / Solutions</div>
+            <div id="statRoots" class="stat-val" style="color: var(--accent-cyan);">x₁ = 2, x₂ = 3</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Vertex (h, k)</div>
+            <div id="statVertex" class="stat-val">(2.5, -0.25)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Extremum</div>
+            <div id="statExtrema" class="stat-val" style="font-size: 0.8rem;">Min at y = -0.25</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Axis of Symmetry</div>
+            <div id="statAxis" class="stat-val">x = 2.5</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Y-Intercept</div>
+            <div id="statYInt" class="stat-val">(0, 6)</div>
+          </div>
+          <div class="stat-box" style="grid-column: span 2;">
+            <div class="stat-title">Factored Form</div>
+            <div id="statFactored" class="stat-val" style="font-size: 0.9rem;">(x - 2)(x - 3) = 0</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Interactive Parabola Canvas -->
+      <section class="card graph-card">
+        <div class="card-header">
+          <h2 class="card-title">Dynamic Parabola Visualization</h2>
+          <span style="font-size: 0.8rem; color: var(--text-dim);">Scroll to Zoom • Drag to Pan</span>
+        </div>
+
+        <div class="graph-container">
+          <canvas id="parabolaCanvas"></canvas>
+          <div id="graphTooltip" class="graph-tooltip"></div>
+          
+          <div class="graph-toolbar">
+            <button id="btnZoomIn" class="graph-tool-btn" title="Zoom In">+</button>
+            <button id="btnZoomOut" class="graph-tool-btn" title="Zoom Out">−</button>
+            <button id="btnResetView" class="graph-tool-btn" title="Center View">⌂</button>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="graph-legend">
+          <div class="legend-item"><span class="legend-dot dot-roots"></span> Real Roots</div>
+          <div class="legend-item"><span class="legend-dot dot-vertex"></span> Vertex (h, k)</div>
+          <div class="legend-item"><span class="legend-dot dot-yint"></span> Y-Intercept</div>
+          <div class="legend-item"><span class="legend-dot dot-axis"></span> Axis of Symmetry</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ec4899;"></span> Focus & Directrix</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Deep-Dive Tabbed Methods -->
+    <section class="card tabs-container">
+      <nav class="tabs-nav">
+        <button class="tab-btn active" data-tab="tabFormula">Quadratic Formula</button>
+        <button class="tab-btn" data-tab="tabSquare">Completing the Square</button>
+        <button class="tab-btn" data-tab="tabFactoring">Factoring & Vertex Form</button>
+        <button class="tab-btn" data-tab="tabQuiz">Practice Quiz</button>
+        <button class="tab-btn" data-tab="tabHistory">History</button>
+      </nav>
+
+      <!-- Tab 1: Quadratic Formula Steps -->
+      <div id="tabFormula" class="tab-pane active">
+        <div id="stepsFormula" class="steps-list"></div>
+      </div>
+
+      <!-- Tab 2: Completing Square Steps -->
+      <div id="tabSquare" class="tab-pane">
+        <div id="stepsSquare" class="steps-list"></div>
+      </div>
+
+      <!-- Tab 3: Factoring & Vertex Form Steps -->
+      <div id="tabFactoring" class="tab-pane">
+        <div id="stepsFactoring" class="steps-list"></div>
+      </div>
+
+      <!-- Tab 4: Practice Quiz Mode -->
+      <div id="tabQuiz" class="tab-pane">
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <div>
+              <label for="quizDifficulty" style="font-size:0.85rem; font-weight:600; margin-right:8px;">Difficulty:</label>
+              <select id="quizDifficulty" style="background:var(--bg-primary); color:var(--text-main); border:1px solid var(--border-color); padding:0.35rem 0.6rem; border-radius:4px;">
+                <option value="easy">Easy (Integer roots, a = 1)</option>
+                <option value="medium" selected>Medium (Rational roots, varied a)</option>
+                <option value="hard">Hard (Complex & Irrational)</option>
+              </select>
+            </div>
+            <div id="quizStreak" class="quiz-score">Streak: 0 🔥</div>
+          </div>
+
+          <div id="quizEquation" class="quiz-equation">2x² - 4x - 6 = 0</div>
+
+          <div class="quiz-inputs">
+            <div class="quiz-input-field">
+              <label for="quizAnsD">Discriminant (Δ)</label>
+              <input type="number" id="quizAnsD" placeholder="e.g. 64">
+            </div>
+            <div class="quiz-input-field">
+              <label for="quizAnsX1">Root x₁ (Optional)</label>
+              <input type="text" id="quizAnsX1" placeholder="e.g. -1">
+            </div>
+            <div class="quiz-input-field">
+              <label for="quizAnsX2">Root x₂ (Optional)</label>
+              <input type="text" id="quizAnsX2" placeholder="e.g. 3">
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:center; gap:0.75rem;">
+            <button id="btnCheckQuiz" class="btn btn-primary" style="flex:initial; min-width:140px;">Submit Answer</button>
+            <button id="btnQuizHint" class="btn btn-secondary">💡 Hint</button>
+            <button id="btnNewQuiz" class="btn btn-secondary">Next Problem ➔</button>
+          </div>
+
+          <div id="quizFeedback" class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <!-- Tab 5: History -->
+      <div id="tabHistory" class="tab-pane">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <h3 style="font-size:1rem; font-weight:700;">Recently Solved Equations</h3>
+          <button id="btnClearHistory" class="btn btn-secondary" style="font-size:0.8rem; padding:0.3rem 0.6rem;">Clear History</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <footer>
+    <p>QuadraticLab — Comprehensive Quadratic Equation Solver & Visualizer</p>
+    <p style="margin-top:0.35rem; color:var(--text-dim);">
+      Standard Form: <em>ax² + bx + c = 0</em> &nbsp;•&nbsp; 
+      Quadratic Formula: <em>x = [-b ± √(b² - 4ac)] / (2a)</em> &nbsp;•&nbsp; 
+      Vertex: <em>h = -b / (2a), k = c - b² / (4a)</em>
+    </p>
+  </footer>
+
+  <!-- Core Math Engine & UI Script -->
+  <script src="solver-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
